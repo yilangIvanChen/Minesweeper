@@ -4,6 +4,11 @@ private static int NUM_COLS = 5;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList<MSButton>(); //ArrayList of just the minesweeper buttons that are mined
 
+/*
+to do:
+adjust mine generation
+winning and losing message
+*/
 void setup() {
   size(400, 400);
   textAlign(CENTER, CENTER);
@@ -25,21 +30,29 @@ public void setMines() {
 }
 
 public void draw() {
-  background( 0 );
+  background(0);
   if (isWon() == true)
     displayWinningMessage();
 }
 public boolean isWon() {
-  //your code here
-  return false;
+  for (int i = 0; i < mines.size(); i++){
+    if (!mines.get(i).isFlagged())
+      return false;
+  }
+  return true;
 }
 
 public void displayLosingMessage() {
-  //your code here
+   textSize(128);
+  fill(#AD262B);
+  text("you did not lock in twin",200,200);
 }
 
 public void displayWinningMessage() {
-  //your code here
+  //for (int i = 0; i < mines.size(); i++){} turn mines green
+  textSize(128);
+  fill(#399DFF);
+  text("you locked in twin",200,200);
 }
 
 public boolean isValid(int row, int col) {
@@ -64,6 +77,7 @@ public class MSButton {
   private float x, y, width, height;
   private boolean clicked, flagged;
   private String myLabel;
+  private color myColor;
   public MSButton (int row, int col) {
     width = 400/NUM_COLS;
     height = 400/NUM_ROWS;
@@ -103,7 +117,7 @@ public class MSButton {
     else if (clicked)
       fill(200);
     else 
-    fill(100);
+      fill(100);
     rect(x, y, width, height);
     fill(0);
     text(myLabel, x+width/2, y+height/2);
