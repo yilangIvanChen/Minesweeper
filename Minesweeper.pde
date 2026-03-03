@@ -19,7 +19,7 @@ void setup() {
     for (int col = 0; col < NUM_COLS; col++)
       buttons[row][col] = new MSButton(row, col);
   }
-  while (mines.size() < 21)
+  while (mines.size() < 10)
     setMines();
 }
 
@@ -66,7 +66,7 @@ public int countMines(int row, int col) {
   int numMines = 0;
   for (int i = row-1; i <= row+1; i++) {
     for (int j = col-1; j <= col+1; j++) {
-      if (isValid(row, col) && !(i==row && j==col) && mines.contains(buttons[row][col]))
+      if (isValid(i, j) && !(i==row && j==col) && mines.contains(buttons[i][j]))
         numMines++;
     }
   }
@@ -101,10 +101,12 @@ public class MSButton {
       displayLosingMessage();
     else if (countMines(myRow, myCol) > 0)
       setLabel(countMines(myRow, myCol));
-    for (int i = myRow-1; i <= myRow+1; i++) {
-      for (int j = myCol-1; j <= myCol+1; j++) {
-        if (isValid(i, j) && !(myRow==i && myCol==j) && !buttons[i][j].clicked && !mines.contains(this))
-          buttons[i][j].mousePressed();
+    else {  
+      for (int i = myRow-1; i <= myRow+1; i++) {
+        for (int j = myCol-1; j <= myCol+1; j++) {
+          if (isValid(i, j) && (myRow==i ^ myCol==j) && !buttons[i][j].clicked && countMines(i, j) == 0)
+            buttons[i][j].mousePressed();
+        }
       }
     }
   }
