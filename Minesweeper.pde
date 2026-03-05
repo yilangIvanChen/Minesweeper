@@ -1,13 +1,14 @@
 import de.bezier.guido.*;
 private static int NUM_ROWS = 4;
 private static int NUM_COLS = 4;
+private boolean isLost = false;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList<MSButton>(); //ArrayList of just the minesweeper buttons that are mined
 
 /*
 to do:
  adjust mine generation
- winning and losing message
+ losing message
  */
 
 void setup() {
@@ -50,7 +51,6 @@ public void displayLosingMessage() {
 }
 
 public void displayWinningMessage() {
-  //for (int i = 0; i < mines.size(); i++){} turn mines green
   textSize(128);
   fill(#399DFF);
   text("you locked in twin", 200, 200);
@@ -78,7 +78,6 @@ public class MSButton {
   private float x, y, width, height;
   private boolean clicked, flagged;
   private String myLabel;
-  private color myColor;
   public MSButton (int row, int col) {
     width = 400/NUM_COLS;
     height = 400/NUM_ROWS;
@@ -122,7 +121,7 @@ public class MSButton {
       if (mines.contains(this))
         fill(#29FF2A);
       if (myLabel.length() > 0)
-        setLabel("you locked \n in twin");
+        setLabel("tuff\nstuff");
     }
     rect(x, y, width, height);
     fill(0);
