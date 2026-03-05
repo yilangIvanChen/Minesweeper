@@ -1,6 +1,6 @@
 import de.bezier.guido.*;
-private static int NUM_ROWS = 7;
-private static int NUM_COLS = 7;
+private static int NUM_ROWS = 4;
+private static int NUM_COLS = 4;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList<MSButton>(); //ArrayList of just the minesweeper buttons that are mined
 
@@ -19,7 +19,7 @@ void setup() {
     for (int col = 0; col < NUM_COLS; col++)
       buttons[row][col] = new MSButton(row, col);
   }
-  while (mines.size() < 10)
+  while (mines.size() < 3)
     setMines();
 }
 
@@ -96,15 +96,14 @@ public class MSButton {
     if (mouseButton == RIGHT) {
       clicked = false;
       flagged = !flagged;
-    }
-    if (mines.contains(this))
+    } else if (mines.contains(this))
       displayLosingMessage();
     else if (countMines(myRow, myCol) > 0)
       setLabel(countMines(myRow, myCol));
     else {  
       for (int i = myRow-1; i <= myRow+1; i++) {
         for (int j = myCol-1; j <= myCol+1; j++) {
-          if (isValid(i, j) && (myRow==i ^ myCol==j) && !buttons[i][j].clicked && countMines(i, j) == 0)
+          if (isValid(i, j) && !(myRow==i && myCol==j) && !buttons[i][j].clicked)
             buttons[i][j].mousePressed();
         }
       }
@@ -112,16 +111,22 @@ public class MSButton {
   }
   public void draw() {    
     if (flagged)
-      fill(0);
+      fill(#FAF29A);
     else if (clicked && mines.contains(this)) 
       fill(255, 0, 0);
     else if (clicked)
       fill(200);
     else 
     fill(100);
+    if (isWon()) {
+      if (mines.contains(this))
+        fill(#29FF2A);
+      if (myLabel.length() > 0)
+        setLabel("you locked \n in twin");
+    }
     rect(x, y, width, height);
     fill(0);
-    textSize(22);
+    textSize(18);
     text(myLabel, x+width/2, y+height/2);
   }
 
