@@ -1,15 +1,8 @@
 import de.bezier.guido.*;
-private static int NUM_ROWS = 4;
-private static int NUM_COLS = 4;
-private boolean isLost = false;
+private static int NUM_ROWS = 12;
+private static int NUM_COLS = 12;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList<MSButton>(); //ArrayList of just the minesweeper buttons that are mined
-
-/*
-to do:
- adjust mine generation
- losing message
- */
 
 void setup() {
   size(400, 400);
@@ -20,7 +13,7 @@ void setup() {
     for (int col = 0; col < NUM_COLS; col++)
       buttons[row][col] = new MSButton(row, col);
   }
-  while (mines.size() < 3)
+  while (mines.size() < 30)
     setMines();
 }
 
@@ -33,10 +26,14 @@ public void setMines() {
 
 public void draw() {
   background(0);
-  if (isWon() == true)
-    displayWinningMessage();
 }
 public boolean isWon() {
+  for (int i = 0; i < NUM_ROWS; i++){
+    for (int j = 0; j < NUM_COLS; j++){
+      if (!mines.contains(buttons[i][j]) && buttons[i][j].isFlagged())
+        return false;
+    }
+  }
   for (int i = 0; i < mines.size(); i++) {
     if (!mines.get(i).isFlagged())
       return false;
@@ -45,15 +42,14 @@ public boolean isWon() {
 }
 
 public void displayLosingMessage() {
-  textSize(128);
-  fill(#AD262B);
-  text("you did not lock in twin", 200, 200);
-}
-
-public void displayWinningMessage() {
-  textSize(128);
-  fill(#399DFF);
-  text("you locked in twin", 200, 200);
+  for (int i = 0; i < NUM_ROWS; i++) {
+    for (int j = 0; j < NUM_COLS; j++){
+      if (buttons[i][j].hasLabel())
+        buttons[i][j].setLabel("womp\nwomp");
+      if (mines.contains(buttons[i][j]))
+        buttons[i][j].clicked = true;
+    }
+  }
 }
 
 public boolean isValid(int row, int col) {
@@ -125,10 +121,16 @@ public class MSButton {
     }
     rect(x, y, width, height);
     fill(0);
-    textSize(18);
+    textSize(12);
     text(myLabel, x+width/2, y+height/2);
   }
-
+  
+  public boolean hasLabel(){
+    if (myLabel.length() > 0)
+      return true;
+    return false;
+  }
+  
   public void setLabel(String newLabel) {
     myLabel = newLabel;
   }
